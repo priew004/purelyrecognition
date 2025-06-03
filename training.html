@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Trials</title>
+  <script src="https://unpkg.com/jspsych@8.2.1"></script>
+  <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="lib/jspsych-7-pavlovia-2022.1.1.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      display: none;
+    }
+
+    .stimulus {
+      margin: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stimulus img {
+      max-width: 90%;
+      max-height: 70vh;
+      border-radius: 5px;
+      object-fit: contain;
+    }
+
+    .response {
+      margin: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+    }
+
+    .response-section {
+      margin-bottom: 20px;
+      width: 45%;
+    }
+
+    .response-section label {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: bold;
+    }
+
+    .response-section select {
+      display: none;
+    }
+
+    .buttons {
+      text-align: center;
+      width: 100%;
+      margin-top: auto;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button.submit {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .feedback {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .fixation-cross {
+      font-size: 40px;
+      font-weight: bold;
+      margin: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 16px;
+      color: #333;
+      z-index: 10;
+    }
+
+    .custom-select {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .custom-dropdown {
+      position: relative;
+      display: block;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: white;
+      cursor: pointer;
+      text-align: left;
+      margin: 0 auto;
+    }
+
+    .custom-dropdown-selected {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .custom-dropdown-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: white;
+      z-index: 10;
+      display: none;
+      text-align: left;
+    }
+
+    .custom-dropdown-options.show {
+      display: block;
+    }
+
+    .custom-dropdown-option {
+      padding: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .custom-dropdown-option:hover {
+      background-color: #f0f0f0;
+    }
+
+    .option-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    #fixation {
+      margin-top: auto;
+    }
+
+    #stimulus {
+      margin-top: auto;
+    }
+
+    #mask {
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-text" id="progress-text">0/0</div>
+
+  <div id="response" class="response hidden">
+    <div class="response-section">
+      <label for="source-select">What is the <span style="color: #4CAF50;">hidden (source) object</span>?</label>
+      <div class="custom-select">
+        <select id="source-select">
+          <option value="">Select an option</option>
+        </select>
+        <div class="custom-dropdown" id="source-dropdown">
+          <div class="custom-dropdown-selected">Select an option</div>
+          <div class="custom-dropdown-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="response-section">
+      <label for="aperture-select">What is the <span style="color: #f44336;">object in the apertures</span>?</label>
+      <div class="custom-select">
+        <select id="aperture-select">
+          <option value="">Select an option</option>
+        </select>
+        <div class="custom-dropdown" id="aperture-dropdown">
+          <div class="custom-dropdown-selected">Select an option</div>
+          <div class="custom-dropdown-options"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="fixation" class="fixation-cross hidden">+</div>
+  <div id="stimulus" class="stimulus hidden">
+    <img id="stimulus-image" src="" alt="Training Stimulus">
+  </div>
+  <div id="mask" class="stimulus hidden">
+    <img id="mask-image" src="phase_scrambled_mask.png" alt="Phase Scrambled Mask">
+  </div>
+
+  <div class="buttons">
+    <button class="submit" onclick="submitResponse()">Submit</button>
+  </div>
+
+  <div id="feedback" class="feedback hidden"></div>
+
+  <script>
+    /* init connection with pavlovia.org */
+    const pavlovia_init = {
+      type: jsPsychPavlovia,
+      command: "init"
+    };
+
+    /* finish connection with pavlovia.org */
+    var pavlovia_finish = {
+      type: jsPsychPavlovia,
+      command: "finish"
+    };
+
+    const trainingData = [
+      { stimulus: "unambiguous_train_patterns/COCO_train2014_000000000078_OCCLUDED_BY_COCO_train2014_000000032787.png", source: "clock", aperture: "airplane" },
+      { stimulus: "unambiguous_train_patterns/COCO_train2014_000000032787_OCCLUDED_BY_COCO_train2014_000000246156.png", source: "airplane", aperture: "bicycle" },
+      { stimulus: "unambiguous_train_patterns/COCO_train2014_000000106621_OCCLUDED_BY_COCO_train2014_000000081981.png", source: "dog", aperture: "cake" },
+      { stimulus: "unambiguous_train_patterns/COCO_train2014_000000147501_OCCLUDED_BY_COCO_train2014_000000172036.png", source: "refrigerator", aperture: "bear" },
+      { stimulus: "unambiguous_train_patterns/COCO_train2014_000000180281_OCCLUDED_BY_COCO_train2014_000000213158.png", source: "giraffe", aperture: "elephant" },
+    ];
+    let currentTrial = 0;
+    let correctAnswers = 0;
+    let totalTrials;
+    let sourceDropdown, apertureDropdown;
+
+    function createCustomDropdown(selectElement, dropdownElement, isSource) {
+      const selectedDiv = dropdownElement.querySelector('.custom-dropdown-selected');
+      const optionsDiv = dropdownElement.querySelector('.custom-dropdown-options');
+
+      optionsDiv.innerHTML = '';
+
+      const defaultOption = document.createElement('div');
+      defaultOption.classList.add('custom-dropdown-option');
+      defaultOption.dataset.value = "";
+      defaultOption.textContent = "Select an option";
+      optionsDiv.appendChild(defaultOption);
+
+      defaultOption.addEventListener('click', function() {
+        selectElement.value = this.dataset.value;
+        selectedDiv.textContent = "Select an option";
+        optionsDiv.classList.remove('show');
+      });
+
+      let optionArray = [];
+      if (isSource) {
+        trainingData.forEach(trial => {
+          if (!optionArray.some(option => option === trial.source)) {
+            optionArray.push(trial.source);
+          }
+        });
+      } else {
+        trainingData.forEach(trial => {
+          if (!optionArray.some(option => option === trial.aperture)) {
+            optionArray.push(trial.aperture);
+          }
+        });
+      }
+
+      optionArray.forEach(optionName => {
+        const iconSrc = `icons/${optionName}.png`;
+
+        const optionDiv = document.createElement('div');
+        optionDiv.classList.add('custom-dropdown-option');
+        optionDiv.dataset.value = optionName;
+
+        const icon = document.createElement('img');
+        icon.src = iconSrc;
+        icon.className = 'option-icon';
+        icon.onerror = () => {
+          icon.src = "icons/unknown.png";
+        };
+
+        optionDiv.appendChild(icon);
+        optionDiv.appendChild(document.createTextNode(optionName));
+
+        optionsDiv.appendChild(optionDiv);
+
+        optionDiv.addEventListener('click', function() {
+          selectElement.value = this.dataset.value;
+          selectedDiv.innerHTML = this.innerHTML;
+          optionsDiv.classList.remove('show');
+        });
+      });
+
+      selectedDiv.addEventListener('click', function(e) {
+        e.stopPropagation();
+        optionsDiv.classList.toggle('show');
+      });
+    }
+
+    function updateProgressText() {
+      const progressText = document.getElementById('progress-text');
+      progressText.textContent = `${currentTrial + 1}/${totalTrials}`;
+    }
+
+    function startTrial() {
+      const sourceSelect = document.getElementById('source-select');
+      const apertureSelect = document.getElementById('aperture-select');
+
+      const sourceSelected = document.querySelector('#source-dropdown .custom-dropdown-selected');
+      const apertureSelected = document.querySelector('#aperture-dropdown .custom-dropdown-selected');
+      sourceSelected.textContent = "Select an option";
+      apertureSelected.textContent = "Select an option";
+
+      sourceSelect.value = "";
+      apertureSelect.value = "";
+
+      document.getElementById('feedback').classList.add('hidden');
+      document.getElementById('fixation').classList.remove('hidden');
+
+      setTimeout(() => {
+        document.getElementById('fixation').classList.add('hidden');
+        document.getElementById('stimulus').classList.remove('hidden');
+        document.getElementById('stimulus-image').src = trainingData[currentTrial].stimulus;
+
+        setTimeout(() => {
+          document.getElementById('stimulus').classList.add('hidden');
+          document.getElementById('mask').classList.remove('hidden');
+
+          setTimeout(() => {
+            document.getElementById('mask').classList.add('hidden');
+            document.getElementById('response').classList.remove('hidden');
+          }, 150);
+        }, 400);
+      }, 150);
+    }
+
+    function submitResponse() {
+      const sourceSelect = document.getElementById('source-select');
+      const apertureSelect = document.getElementById('aperture-select');
+      const sourceValue = sourceSelect.value;
+      const apertureValue = apertureSelect.value;
+      const feedbackDiv = document.getElementById('feedback');
+
+      const correctSource = trainingData[currentTrial].source;
+      const correctAperture = trainingData[currentTrial].aperture;
+      let feedback = '';
+
+      if (sourceValue === correctSource && apertureValue === correctAperture) {
+        feedback = "Correct!";
+        correctAnswers++;
+      } else {
+        feedback = `Incorrect. The correct answers were:<br>
+          <span style="color: #4CAF50;">Hidden (source) object:</span> ${correctSource}<br>
+          <span style="color: #f44336;">Object in the apertures:</span> ${correctAperture}`;
+      }
+
+      feedbackDiv.innerHTML = feedback;
+      feedbackDiv.classList.remove('hidden');
+      document.getElementById('response').classList.add('hidden');
+
+      currentTrial++;
+      updateProgressText();
+
+      if (currentTrial < trainingData.length) {
+        setTimeout(startTrial, 2000);
+      } else {
+        feedbackDiv.innerHTML = `Training complete! You got ${correctAnswers} out of ${totalTrials} correct.`;
+        feedbackDiv.style.color = '#333';
+        feedbackDiv.classList.remove('hidden');
+
+        setTimeout(() => {
+          alert("Training Complete! (Redirect to experiment.html disabled for demo)");
+        }, 3000);
+      }
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.custom-dropdown-options.show').forEach(el => {
+          el.classList.remove('show');
+        });
+      }
+    });
+
+    async function initializeTraining() {
+      totalTrials = trainingData.length;
+      const sourceSelect = document.getElementById('source-select');
+      const apertureSelect = document.getElementById('aperture-select');
+      sourceDropdown = document.getElementById('source-dropdown');
+      apertureDropdown = document.getElementById('aperture-dropdown');
+
+      createCustomDropdown(sourceSelect, sourceDropdown, true);
+      createCustomDropdown(apertureSelect, apertureDropdown, false);
+      updateProgressText();
+
+      // Initialize jsPsych
+      jsPsych.init({
+        timeline: [pavlovia_init], // Add Pavlovia init trial
+        on_finish: function() { // After jsPsych finishes...
+          startTrial(); // ...start the first training trial
+        }
+      });
+    }
+
+    function openFullscreen() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    }
+
+    window.onload = () => {
+      openFullscreen();
+      initializeTraining();
+    };
+  </script>
+</body>
+</html>

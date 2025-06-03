@@ -1,0 +1,18 @@
+const trainingData = [
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000000078_OCCLUDED_BY_COCO_train2014_000000032787.png", source: "clock", aperture: "airplane" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000032787_OCCLUDED_BY_COCO_train2014_000000246156.png", source: "airplane", aperture: "bicycle" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000106621_OCCLUDED_BY_COCO_train2014_000000081981.png", source: "dog", aperture: "cake" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000147501_OCCLUDED_BY_COCO_train2014_000000172036.png", source: "refrigerator", aperture: "bear" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000180281_OCCLUDED_BY_COCO_train2014_000000213158.png", source: "giraffe", aperture: "elephant" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000213060_OCCLUDED_BY_COCO_train2014_000000246156.png", source: "clock", aperture: "bicycle" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000213158_OCCLUDED_BY_COCO_train2014_000000376916.png", source: "elephant", aperture: "truck" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000213158_OCCLUDED_BY_COCO_train2014_000000542725.png", source: "elephant", aperture: "bear" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000221330_OCCLUDED_BY_COCO_train2014_000000287006.png", source: "clock", aperture: "pizza" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000540746_OCCLUDED_BY_COCO_train2014_000000305450.png", source: "bench", aperture: "bicycle" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000542720_OCCLUDED_BY_COCO_train2014_000000458832.png", source: "bear", aperture: "cat" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000542725_OCCLUDED_BY_COCO_train2014_000000434200.png", source: "bear", aperture: "bicycle" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000548979_OCCLUDED_BY_COCO_train2014_000000540988.png", source: "giraffe", aperture: "bench" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000549104_OCCLUDED_BY_COCO_train2014_000000532525.png", source: "bench", aperture: "toilet" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000565321_OCCLUDED_BY_COCO_train2014_000000532491.png", source: "teddy bear", aperture: "cat" },
+  { stimulus: "unambiguous_train_patterns/COCO_train2014_000000573655_OCCLUDED_BY_COCO_train2014_000000549104.png", source: "pizza", aperture: "bench" },
+];

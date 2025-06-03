@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training</title>
+    <script src="https://unpkg.com/jspsych@8.2.1"></script>
+    <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="lib/jspsych-7-pavlovia-2022.1.1.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0; /* Remove default body margins */
+      padding: 0; /* Remove default body padding */
+      max-width: 100%; /* Ensure it takes full width */
+      height: 100vh; /* Ensure it takes full height */
+      overflow: hidden; /* Hide scrollbars */
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .instruction-text {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .images {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .images img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+    .buttons {
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.next {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Training Session</h1>
+  <div class="instruction-text">
+    <p>In this task, you will see images of objects that are partially hidden behind another image. Your goal is to identify the hidden object as accurately as possible.</p>
+    <p>Here’s how it works:</p>
+    <ol>
+      <li>You’ll see an image with cut-outs (aperture) that hide part of another image.</li>
+      <li>Your task is to decide what the hidden object is, AND what the object in the apertures is.</li>
+      <li>You’ll select your answers from a list of options.</li>
+    </ol>
+    <p>Let’s practice! Below is an example of what you’ll see during the task.</p>
+  </div>
+  <div class="images">
+    <img src="aperture_image_nocolors.png" alt="Example Aperture">
+    <p>The image above shows an aperture hiding part of another image. Can you guess what the hidden object is? What object is in the apertures?</p>
+  </div>
+  <div class="buttons">
+    <button class="next" onclick="startPractice()">Start Practice Trial</button>
+  </div>
+
+  <script>
+    /* init connection with pavlovia.org */
+    const pavlovia_init = {
+        type: jsPsychPavlovia,
+        command: "init"
+    };
+
+    /* finish connection with pavlovia.org */
+    var pavlovia_finish = {
+        type: jsPsychPavlovia,
+        command: "finish"
+    };
+
+    function openFullscreen() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      }
+    }
+
+    function startPractice() {
+      openFullscreen(); //Attempt to open fullscreen
+      // Redirect to the practice trial
+      //window.location.href = "practice.html"; // Replace with your practice trial page
+      jsPsych.init({
+        timeline: [pavlovia_init, pavlovia_finish],
+        on_finish: function() { window.location.href = "practice.html"; } // Redirect after Pavlovia finish
+      });
+    }
+  </script>
+</body>
+</html>

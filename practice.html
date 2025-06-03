@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Trial</title>
+  <script src="https://unpkg.com/jspsych@8.2.1"></script>
+  <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="lib/jspsych-7-pavlovia-2022.1.1.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0; /* Remove default body margins */
+      padding: 0; /* Remove default body padding */
+      max-width: 100%; /* Ensure it takes full width */
+      height: 100vh; /* Ensure it takes full height */
+      overflow: hidden; /* Hide scrollbars */
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .instruction-text {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .stimulus {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .stimulus img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+    .response {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .response-section {
+      margin-bottom: 20px;
+    }
+    .response-section label {
+      font-size: 16px;
+      margin-bottom: 10px;
+      display: block;
+      font-weight: bold;
+    }
+    /*  Hiding the original select element */
+    .response-section select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 300px;
+      appearance: none; /* Remove default dropdown arrow */
+      background-color: white;
+      display: none; /* Hide the original select */
+    }
+    .buttons {
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.submit {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .feedback {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .source {
+      color: #4CAF50; /* Green for source object */
+    }
+    .aperture {
+      color: #f44336; /* Red for aperture object */
+    }
+    .custom-select {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      max-width: 300px;
+    }
+    .custom-select::after {
+      content: "▼";
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #333;
+    }
+    .option-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    /* Styles for the custom dropdown */
+    .custom-dropdown {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-selected {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .custom-dropdown-options {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        z-index: 10;
+        display: none; /* Hidden by default */
+    }
+
+    .custom-dropdown-options.show {
+        display: block; /* Show when the dropdown is active */
+    }
+
+    .custom-dropdown-option {
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-option:hover {
+        background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Practice Trial</h1>
+  <div class="instruction-text">
+    <p>In this practice trial, you’ll see an image with multiple cut-outs (apertures) hiding parts of another image. Your task is to identify:</p>
+    <ol>
+      <li>The <span class="source">hidden (source) object</span> behind the apertures.</li>
+      <li>The <span class="aperture">object in the apertures</span> (the image in the cut-outs).</li>
+    </ol>
+    <p>Select your answers from the dropdown menus below and click "Submit" to continue.</p>
+  </div>
+  <div class="stimulus">
+    <img src="SampleAperture_GreenRedBorders.png" alt="Practice Stimulus">
+  </div>
+  <div class="response">
+    <div class="response-section">
+      <label for="source-select">What is the <span class="source">hidden (source) object</span>?</label>
+      <div class="custom-select">
+        <select id="source-select">
+          <option value="airplane" data-icon="icons/airplane.png">Airplane</option>
+          <option value="bear" data-icon="icons/bear.png">Bear</option>
+          <option value="bench" data-icon="icons/bench.png">Bench</option>
+          <option value="bicycle" data-icon="icons/bicycle.png">Bicycle</option>
+          <option value="cake" data-icon="icons/cake.png">Cake</option>
+          <option value="cat" data-icon="icons/cat.png">Cat</option>
+          <option value="clock" data-icon="icons/clock.png">Clock</option>
+          <option value="dog" data-icon="icons/dog.png">Dog</option>
+          <option value="elephant" data-icon="icons/elephant.png">Elephant</option>
+          <option value="giraffe" data-icon="icons/giraffe.png">Giraffe</option>
+          <option value="pizza" data-icon="icons/pizza.png">Pizza</option>
+          <option value="refrigerator" data-icon="icons/refrigerator.png">Refrigerator</option>
+          <option value="teddy bear" data-icon="icons/teddybear.png">Teddy Bear</option>
+          <option value="toilet" data-icon="icons/toilet.png">Toilet</option>
+          <option value="truck" data-icon="icons/truck.png">Truck</option>
+        </select>
+        <div class="custom-dropdown" id="source-dropdown">
+            <div class="custom-dropdown-selected">Select an object</div>
+            <div class="custom-dropdown-options"></div>
+        </div>
+      </div>
+    </div>
+    <div class="response-section">
+      <label for="aperture-select">What is the <span class="aperture">object in the apertures</span>?</label>
+      <div class="custom-select">
+        <select id="aperture-select">
+          <option value="airplane" data-icon="icons/airplane.png">Airplane</option>
+          <option value="bear" data-icon="icons/bear.png">Bear</option>
+          <option value="bench" data-icon="icons/bench.png">Bench</option>
+          <option value="bicycle" data-icon="icons/bicycle.png">Bicycle</option>
+          <option value="cake" data-icon="icons/cake.png">Cake</option>
+          <option value="cat" data-icon="icons/cat.png">Cat</option>
+          <option value="clock" data-icon="icons/clock.png">Clock</option>
+          <option value="dog" data-icon="icons/dog.png">Dog</option>
+          <option value="elephant" data-icon="icons/elephant.png">Elephant</option>
+          <option value="giraffe" data-icon="icons/giraffe.png">Giraffe</option>
+          <option value="pizza" data-icon="icons/pizza.png">Pizza</option>
+          <option value="refrigerator" data-icon="icons/refrigerator.png">Refrigerator</option>
+          <option value="teddy bear" data-icon="icons/teddybear.png">Teddy Bear</option>
+          <option value="toilet" data-icon="icons/toilet.png">Toilet</option>
+          <option value="truck" data-icon="icons/truck.png">Truck</option>
+        </select>
+        <div class="custom-dropdown" id="aperture-dropdown">
+            <div class="custom-dropdown-selected">Select an object</div>
+            <div class="custom-dropdown-options"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="buttons">
+    <button class="submit" onclick="submitResponse()">Submit</button>
+  </div>
+  <div class="feedback" id="feedback"></div>
+
+  <script>
+     /* init connection with pavlovia.org */
+    const pavlovia_init = {
+        type: jsPsychPavlovia,
+        command: "init"
+    };
+
+    /* finish connection with pavlovia.org */
+    var pavlovia_finish = {
+        type: jsPsychPavlovia,
+        command: "finish"
+    };
+
+    function openFullscreen() {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+        }
+    }
+
+    function createCustomDropdown(selectElement, dropdownElement) {
+        const options = Array.from(selectElement.options);
+        const selectedDiv = dropdownElement.querySelector('.custom-dropdown-selected');
+        const optionsDiv = dropdownElement.querySelector('.custom-dropdown-options');
+
+        // Populate the custom dropdown options
+        options.forEach(option => {
+            const iconSrc = option.getAttribute('data-icon');
+            const optionDiv = document.createElement('div');
+            optionDiv.classList.add('custom-dropdown-option');
+            optionDiv.dataset.value = option.value; // Store the value
+
+            if (iconSrc) {
+                const icon = document.createElement('img');
+                icon.src = iconSrc;
+                icon.className = 'option-icon';
+                optionDiv.appendChild(icon);
+            }
+            optionDiv.appendChild(document.createTextNode(option.text)); // Use option.text
+
+            optionsDiv.appendChild(optionDiv);
+
+            // Add click listener to each option
+            optionDiv.addEventListener('click', function() {
+                selectElement.value = this.dataset.value; // Update the original select
+                selectedDiv.innerHTML = this.innerHTML; // Update the displayed value
+                optionsDiv.classList.remove('show'); // Hide options
+            });
+        });
+
+        // Toggle the dropdown on click
+        selectedDiv.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent document click from firing immediately
+            optionsDiv.classList.toggle('show');
+        });
+    }
+
+    // Initialize custom dropdowns
+    const sourceSelect = document.getElementById('source-select');
+    const apertureSelect = document.getElementById('aperture-select');
+    const sourceDropdown = document.getElementById('source-dropdown');
+    const apertureDropdown = document.getElementById('aperture-dropdown');
+
+    createCustomDropdown(sourceSelect, sourceDropdown);
+    createCustomDropdown(apertureSelect, apertureDropdown);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.custom-dropdown-options.show').forEach(el => {
+            el.classList.remove('show');
+        });
+    });
+
+    // Function to handle form submission
+    function submitResponse() {
+      const sourceValue = sourceSelect.value;
+      const apertureValue = apertureSelect.value;
+      const feedbackDiv = document.getElementById('feedback');
+
+      // Simulate correct answers
+      const correctSource = 'clock';
+      const correctAperture = 'dog';
+
+      let feedback = '';
+
+      if (sourceValue === correctSource && apertureValue === correctAperture) {
+        feedback = "Correct! You identified both objects.";
+        feedbackDiv.style.color = "#4CAF50";
+      } else {
+        feedback = `Incorrect. The correct answers were:<br>
+          <span class="source">Hidden (source) object:</span> ${correctSource}<br>
+          <span class="aperture">Object in the apertures:</span> ${correctAperture}`;
+        feedbackDiv.style.color = "#f44336";
+      }
+
+      feedbackDiv.innerHTML = feedback;
+
+      // Optionally, redirect to the next page after a delay
+      //setTimeout(() => {
+      //  window.location.href = "training.html"; // Replace with your next page
+      //}, 5000); // 5-second delay before redirecting
+
+      jsPsych.init({
+            timeline: [pavlovia_finish],
+            on_finish: function () { window.location.href = "training.html"; }
+        });
+    }
+
+    window.onload = () => {
+        openFullscreen();
+
+        // Initialize jsPsych
+        jsPsych.init({
+            timeline: [pavlovia_init],
+            on_finish: function () {
+                console.log("jsPsych init done");
+            }
+        });
+    };
+  </script>
+</body>
+</html>
