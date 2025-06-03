@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consent</title>
+  <script src="https://unpkg.com/jspsych@8.2.1"></script>
+  <link href="https://unpkg.com/jspsych@8.2.1/css/jspsych.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="lib/jspsych-7-pavlovia-2022.1.1.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0; /* Remove default body margins */
+      padding: 0; /* Remove default body padding */
+      max-width: 100%; /* Ensure it takes full width */
+      height: 100vh; /* Ensure it takes full height */
+      overflow: hidden; /* Hide scrollbars */
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .consent-text {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.agree {
+      background-color: #4CAF50;
+      color: white;
+    }
+    button.decline {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Informed Consent Form</h1>
+  <div class="consent-text">
+    <p><strong>Title of Study:</strong> Perception of Natural Stimuli Under Occlusion</p>
+    <p><strong>Researcher:</strong> Jett Priewe</p>
+    <p><strong>Institution:</strong> University of Minnesota, Kersten Lab</p>
+    <p><strong>Purpose of the Study:</strong> This study aims to understand how people make sense of the world around them, even when parts of what they see are hidden or unclear. For example, when you see someone walking behind a fence, your brain can still figure out where they are and what they’re doing. We want to learn more about how this works.</p>
+    <p><strong>What You’ll Do:</strong> You will sit at a computer and look at images of objects. Some parts of these images will be hidden behind cut-outs, or apertures, of another image. You’ll be asked to make decisions about what you see. Each session will last less than 30 minutes.</p>
+    <p><strong>Risks and Benefits:</strong> There are no risks to participating in this study. By taking part, you’ll help us better understand how the human brain processes visual information, which could contribute to advancements in science and technology.</p>
+    <p><strong>Confidentiality:</strong> Your responses will be kept private. All data will be stored securely, and no personally identifiable information will be shared. If the data is shared with other researchers, it will be completely anonymous.</p>
+    <p><strong>Voluntary Participation:</strong> Your participation is completely voluntary. You can stop at any time without any penalty.</p>
+    <p><strong>Contact Information:</strong> If you have any questions, please contact Jett Priewe at priew004@umn.edu.</p>
+    <p><strong>Agreement:</strong> By clicking "I Agree," you confirm that you’ve read and understood this information and that you’re willing to participate in this study.</p>
+  </div>
+  <div class="buttons">
+    <button class="agree" onclick="handleConsent(true)">I Agree</button>
+    <button class="decline" onclick="handleConsent(false)">I Decline</button>
+  </div>
+
+  <script>
+    function handleConsent(consentGiven) {
+      if (consentGiven) {
+        // Redirect to the training page
+        window.location.href = "instructions.html"; 
+      } else {
+        // Redirect to Prolific 
+        window.location.href = "https://app.prolific.com/submissions/complete?cc=C9EPBKBC"; 
+      }
+    }
+  </script>
+</body>
+</html>
